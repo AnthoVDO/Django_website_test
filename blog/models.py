@@ -1,9 +1,17 @@
 from django.db import models
 from django.utils.text import slugify
+from django.contrib.auth.models import User
 
 
 # Create your models here.
+
+class Category(models.Model):
+    name = models.CharField(max_length=36)
+    slug = models.SlugField()
+
 class BlogPost(models.Model):
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True) # Set a user foreign key. The on_delete is present to inform how to manage the article if the user is deleted. Here, we decided to set it to NULL
+    category = models.ManyToManyField(Category) # Set the possibility to add multiple categories to a BlogPost
     title = models.CharField(max_length=100)
     slug = models.SlugField()
     published = models.BooleanField(default=False)
